@@ -3,17 +3,14 @@ function calculateTotalBill($itemPrice, $quantity, $day, $paymentMode, $shopping
 
     $totalBill = $itemPrice * $quantity;
 
-
     if ($day === 'wednesday') {
         $totalBill *= 0.90;
     }
 
-    
     if ($totalBill > 3000) {
         $totalBill *= 0.93;
     }
 
-    
     if ($distinctItems >= 5) {
         $totalBill *= 0.95;
     }
@@ -28,12 +25,10 @@ function calculateTotalBill($itemPrice, $quantity, $day, $paymentMode, $shopping
         $totalBill *= 0.98;
     }
 
-    
     if ($membershipStatus === 'member') {
         $totalBill *= 0.95;
     }
 
-    
     if ($carryBagRequired === 'yes') {
         $totalBill += 10;
     }
@@ -44,16 +39,16 @@ function calculateTotalBill($itemPrice, $quantity, $day, $paymentMode, $shopping
 $errors = [];
 $result = false;
 
-if (isset($_POST['submit'])) {
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
-    $itemPrice = $_POST['itemPrice'];
-    $quantity = $_POST['quantity'];
+    $itemPrice = (float) $_POST['itemPrice'];
+    $quantity = (int) $_POST['quantity'];
     $day = $_POST['day'];
     $paymentMode = $_POST['paymentMode'];
     $shoppingTime = $_POST['shoppingTime'];
     $membershipStatus = $_POST['membershipStatus'];
     $carryBagRequired = $_POST['carryBagRequired'];
-    $distinctItems = $_POST['distinctItems'];
+    $distinctItems = (int) $_POST['distinctItems'];
 
     if ($itemPrice <= 0) $errors[] = "Item price must be greater than 0";
     if ($quantity <= 0) $errors[] = "Quantity must be greater than 0";
@@ -116,20 +111,9 @@ input, select {
     cursor: pointer;
 }
 
-
-.submit-btn {
-    margin-top: 15px;
-    padding: 6px 14px;
-    background: #4CAF50;
-    color: #fff;
-    border: 1px solid #4CAF50;
-    cursor: pointer;
-}
-
 .submit-btn:hover {
     background: #45a049;
 }
-
 
 .error {
     width: 320px;
@@ -154,14 +138,13 @@ th {
     background-color: #f0f0f0;
 }
 </style>
-
 </head>
 
 <body>
 
 <form method="post">
     <label>Item Price</label>
-    <input type="number" name="itemPrice" required>
+    <input type="number" step="0.01" name="itemPrice" required>
 
     <label>Quantity</label>
     <input type="number" name="quantity" required>
@@ -206,7 +189,6 @@ th {
     <input type="number" name="distinctItems" required>
 
     <input type="submit" class="submit-btn" value="Calculate Bill">
-
 </form>
 
 <?php if (!empty($errors)) { ?>
